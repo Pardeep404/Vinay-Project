@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>True Form Coach</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #121212;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #f0f0f0;
+      flex-direction: column;
+    }
+
+    .app-container {
+      background: #1f1f1f;
+      max-width: 600px;
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(0, 229, 255, 0.1);
+      padding: 40px 30px;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .profile img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid #00e5ff;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      color: #00ffff;
+      margin-bottom: 10px;
+    }
+
+    .profile p {
+      margin: 8px 0;
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    form {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #ccc;
+      font-size: 1rem;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      background: #2c2c2c;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #00e5ff;
+      box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.3);
+    }
+
+    button {
+      background: #00e5ff;
+      color: #000;
+      font-weight: bold;
+      padding: 12px;
+      border: none;
+      width: 100%;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: #00cce0;
+      transform: translateY(-2px);
+    }
+
+    #bmi-result,
+    #bmi-suggestion,
+    #diet-chart {
+      margin-top: 20px;
+      color: #eee;
+      font-size: 1rem;
+    }
+
+    ul {
+      padding-left: 20px;
+      text-align: left;
+      margin-top: 10px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    li i {
+      margin-right: 10px;
+      color: #00e5ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header class="profile">
+      <img src="./img.png" alt="Profile Picture">
+      <p><i class="fas fa-user"></i> Vinay</p>
+      <p><i class="fas fa-graduation-cap"></i> Grade: IX</p>
+      <p><i class="fas fa-id-badge"></i> Roll No: 27</p>
+      <p><i class="fas fa-school"></i> Shreeram Model School</p>
+    </header>
+
+    <form>
+      <div style="font-size: 1.6rem; font-weight: 600; color: #00e5ff; margin-bottom: 20px; text-align: center;">True Form Coach</div>
+      <label for="height">Height (cm):</label>
+      <input type="number" id="height" placeholder="e.g. 171">
+
+      <label for="weight">Weight (kg):</label>
+      <input type="number" id="weight" placeholder="e.g. 70">
+
+      <label for="dietType">Diet Type:</label>
+      <select id="dietType">
+        <option value="veg">Vegetarian</option>
+        <option value="nonveg">Non-Vegetarian</option>
+      </select>
+
+      <button type="button" onclick="calculateBMI()">Get Diet Plan</button>
+
+      <p id="bmi-result"></p>
+      <p id="bmi-suggestion"></p>
+      <div id="diet-chart"></div>
+    
+</form>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const greeting = new SpeechSynthesisUtterance("Hello! I'm FitBot. Welcome to your Fitness App. Enter your height, weight and diet type to get your BMI and a custom diet plan.");
+      greeting.pitch = 1;
+      greeting.rate = 1;
+      greeting.volume = 1;
+      greeting.lang = 'en-US';
+      window.speechSynthesis.speak(greeting);
+    });
+
+    function calculateBMI() {
+      const h = parseFloat(document.getElementById('height').value) / 100;
+      const w = parseFloat(document.getElementById('weight').value);
+      const dietType = document.getElementById('dietType').value;
+
+      const result = document.getElementById('bmi-result');
+      const suggestion = document.getElementById('bmi-suggestion');
+      const chart = document.getElementById('diet-chart');
+
+      if (!h || !w || isNaN(h) || isNaN(w)) {
+        result.textContent = "❌ Please enter valid height and weight.";
+        suggestion.textContent = "";
+        chart.innerHTML = "";
+        return;
+      }
+
+      const bmi = w / (h * h);
+      result.textContent = `✅ Your BMI: ${bmi.toFixed(2)}`;
+
+      let category = "";
+      if (bmi < 18.5) {
+        category = "underweight";
+        suggestion.textContent = "You are underweight. Gain healthy weight.";
+      } else if (bmi < 24.9) {
+        category = "normal";
+        suggestion.textContent = "You have a healthy weight. Maintain it!";
+      } else if (bmi < 29.9) {
+        category = "overweight";
+        suggestion.textContent = "You are overweight. Focus on healthy habits.";
+      } else {
+        category = "obese";
+        suggestion.textContent = "You are obese. Seek medical advice.";
+      }
+
+      const dietPlans = {
+        veg: {
+          underweight: ["🥤 Banana shake", "🥪 Paneer sandwich", "🍛 Rice + dal", "🥜 Dry fruits"],
+          normal: ["🥣 Oats with milk", "🥪 Vegetable sandwich", "🥗 Roti + sabzi", "🍎 Fruits"],
+          overweight: ["🥘 Upma", "🫓 Oats chilla", "🥬 Roti + salad", "🍵 Green tea"],
+          obese: ["🍇 Fruits", "🥕 Boiled veggies", "🍞 Roti (no oil)", "🌱 Sprouts"]
+        },
+        nonveg: {
+          underweight: ["🥪 Egg sandwich", "🥚 Boiled eggs", "🍗 Rice + chicken", "🥛 Milk + banana"],
+          normal: ["🍞 Egg toast", "🌯 Chicken wrap", "🍖 Grilled chicken", "🍳 Boiled egg + fruit"],
+          overweight: ["🍳 Omelette + salad", "🐟 Grilled fish", "🍛 Roti + egg curry", "🍓 Fruits + tea"],
+          obese: ["🥚 Boiled egg whites", "🥗 Steamed fish", "🍗 Low-oil chicken", "🍉 Fruits"]
+        }
+      };
+
+      const selectedPlan = dietPlans[dietType][category];
+      const workoutPlans = {
+  underweight: ["🏋️‍♂️ Light strength training", "🚶‍♂️ Daily 30-min walk", "🧘‍♂️ Basic yoga", "🏃‍♂️ Jogging (15 min)", "💪 Resistance band exercises"],
+  normal: ["🏃‍♂️ 30-min cardio", "💪 Full body workout", "🧘 Yoga & stretching", "🚴‍♂️ Cycling", "🏋️‍♂️ Weight training (3x/week)", "🧗 Fun activity (weekend hike)", "🤸‍♂️ Core strengthening"],
+  overweight: ["🚶‍♀️ 45-min brisk walk", "🏃‍♂️ Interval running", "🧘‍♀️ Gentle yoga", "💃 Dance fitness", "💪 Low impact strength"],
+  obese: ["🚶 Slow-paced walking (30-45 min)", "🧘 Chair yoga", "🪑 Seated leg lifts", "🧘‍♂️ Deep breathing/stretching"]
+};
+
+const selectedWorkout = workoutPlans[category];
+chart.innerHTML = `
+  <h3 style='color:#00e5ff;'>🥗 Suggested Diet:</h3>
+  <ul>${selectedPlan.map(item => `<li><i class='fas fa-utensils'></i>${item}</li>`).join('')}</ul>
+  <h3 style='color:#00e5ff; margin-top:20px;'>💪 Workout Plan:</h3>
+  <ul>${selectedWorkout.map(item => `<li><i class='fas fa-dumbbell'></i> ${item}</li>`).join('')}</ul>
+`;
+    }
+  </script>
+</body>
+</html>
